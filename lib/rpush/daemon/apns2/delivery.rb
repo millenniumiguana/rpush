@@ -22,7 +22,7 @@ module Rpush
 
           # Send all preprocessed requests at once
           @client.join(timeout: CLIENT_JOIN_TIMEOUT)
-        rescue NetHttp2::AsyncRequestTimeout => error
+        rescue NetHttp2::AsyncRequestTimeout, Errno::ECONNRESET => error
           mark_batch_retryable(Time.now + 10.seconds, error)
           @client.close
           raise
